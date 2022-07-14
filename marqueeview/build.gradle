@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION
@@ -13,14 +12,5 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:' + SUPPORT_LIBRARY_VERSION
-}
-
-publish {
-    userOrg = 'sfsheng0322'
-    groupId = 'com.sunfusheng'
-    artifactId = 'MarqueeView'
-    publishVersion = VERSION_NAME
-    desc = 'A custom view for vertical or horizontal flip announcement.'
-    website = 'https://github.com/sunfusheng/MarqueeView'
 }
 
