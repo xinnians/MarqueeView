@@ -6,9 +6,11 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.AnimRes;
 import android.support.annotation.FontRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -50,9 +52,11 @@ public class MarqueeView<T> extends ViewFlipper {
     @AnimRes
     private int outAnimResId = R.anim.anim_top_out;
 
-    private int position;
+    private int mPosition = 0;
     private List<T> messages = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
+
+    private boolean isNeedStop = false;
 
     public MarqueeView(Context context) {
         this(context, null);
@@ -228,57 +232,62 @@ public class MarqueeView<T> extends ViewFlipper {
         if (messages == null || messages.isEmpty()) {
             throw new RuntimeException("The messages cannot be empty!");
         }
-        position = 0;
-        addView(createTextView(messages.get(position)));
+        int index = 0;
+        addView(createTextView(messages.get(index), index));
 
         if (messages.size() > 1) {
             setInAndOutAnimation(inAnimResId, outAnimResID);
-            startFlipping();
+//            startFlipping();
+            for (int i = 1; i < messages.size(); i++) {
+                index++;
+                View view = createTextView(messages.get(index), index);
+                if (view.getParent() == null) {
+//                    Log.e("Ian", "view.getParent() == null i:" + i + "messages.size():" + messages.size());
+                    addView(view);
+                }
+            }
         }
 
-        if (getInAnimation() != null) {
-            getInAnimation().setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    if (isAnimStart) {
-                        animation.cancel();
-                    }
-                    isAnimStart = true;
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    position++;
-                    if (position >= messages.size()) {
-                        position = 0;
-                    }
-                    View view = createTextView(messages.get(position));
-                    if (view.getParent() == null) {
-                        addView(view);
-                    }
-                    isAnimStart = false;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-        }
+//        if (getInAnimation() != null) {
+//            getInAnimation().setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                    Log.e("Ian","[onAnimationStart] call.");
+//                    if (isAnimStart) {
+//                        animation.cancel();
+//                    }
+//                    isAnimStart = true;
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    position++;
+//                    if (position >= messages.size()) {
+//                        position = 0;
+//                    }
+//                    Log.e("Ian","[onAnimationEnd] call. position:"+position+", messages.size():"+messages.size());
+//                    View view = createTextView(messages.get(position));
+//                    if (view.getParent() == null) {
+//                        Log.e("Ian","view.getParent() == null");
+//                        addView(view);
+//                    }
+//                    isAnimStart = false;
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
+//        }
     }
 
-    private TextView createTextView(T marqueeItem) {
-        TextView textView = (TextView) getChildAt((getDisplayedChild() + 1) % 3);
+    private MarqueeTextView createTextView(T marqueeItem, int index) {
+        MarqueeTextView textView = (MarqueeTextView) getChildAt(index);
         if (textView == null) {
-            textView = new TextView(getContext());
+            textView = new MarqueeTextView(getContext());
             textView.setGravity(gravity | Gravity.CENTER_VERTICAL);
             textView.setTextColor(textColor);
             textView.setTextSize(textSize);
-            textView.setIncludeFontPadding(true);
-            textView.setSingleLine(singleLine);
-            if (singleLine) {
-                textView.setMaxLines(1);
-                textView.setEllipsize(TextUtils.TruncateAt.END);
-            }
             if (typeface != null) {
                 textView.setTypeface(typeface);
             }
@@ -290,6 +299,23 @@ public class MarqueeView<T> extends ViewFlipper {
                     }
                 }
             });
+            textView.setOnMarqueeCompleteListener(new MarqueeTextView.OnMarqueeCompleteListener() {
+                @Override
+                public void onMarqueeComplete(int position) {
+//                    Log.e("Ian", "[onMarqueeComplete] call. position:" + position);
+                    if(mPosition == position){
+                        showNext();
+                    }
+                }
+
+                @Override
+                public void notMarquee(int position) {
+//                    Log.e("Ian", "[notMarquee] position:" + position);
+                    if(mPosition == position){
+                        showNext();
+                    }
+                }
+            });
         }
         CharSequence message = "";
         if (marqueeItem instanceof CharSequence) {
@@ -298,7 +324,7 @@ public class MarqueeView<T> extends ViewFlipper {
             message = ((IMarqueeItem) marqueeItem).marqueeMessage();
         }
         textView.setText(message);
-        textView.setTag(position);
+        textView.setTag(index);
         return textView;
     }
 
@@ -340,5 +366,26 @@ public class MarqueeView<T> extends ViewFlipper {
 
     public void setTypeface(Typeface typeface) {
         this.typeface = typeface;
+    }
+
+    public void showNext() {
+        if(!isNeedStop){
+            mPosition++;
+            if (mPosition >= messages.size()) {
+                mPosition = 0;
+            }
+            super.showNext();
+        }
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+//        Log.e("Ian","[onVisibilityChanged] visibility:"+visibility);
+        if(visibility == View.VISIBLE){
+            isNeedStop = false;
+        }else{
+            isNeedStop = true;
+        }
     }
 }

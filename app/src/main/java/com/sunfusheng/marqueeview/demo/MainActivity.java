@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.sunfusheng.FirUpdater;
 import com.sunfusheng.marqueeview.demo.adapter.FragmentPagerItemAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setOffscreenPageLimit(1);
         tabLayout.setupWithViewPager(viewPager);
 
-        new FirUpdater(this)
-                .apiToken("3c57fb226edf7facf821501e4eba08d2")
-                .appId("5cbff890ca87a80abed1b4d8")
-                .checkVersion();
+//        new FirUpdater(this)
+//                .apiToken("3c57fb226edf7facf821501e4eba08d2")
+//                .appId("5cbff890ca87a80abed1b4d8")
+//                .checkVersion();
     }
 
     @Override

@@ -38,38 +38,38 @@ public class RecyclerViewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<Item> items = new ArrayList<>();
-        for (int i = 1; i <= 30; i++) {
-            Item item = new Item();
-            item.title = "item" + i;
-            if (i == 3 || i == 27) {
-                List<String> list = new ArrayList<>();
-                for (int j = 1; j <= 10; j++) {
-                    list.add("MarqueeView Item " + i + "-" + j);
-                }
-                item.list = list;
-                item.showList = true;
-            }
-            items.add(item);
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.recycleView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(items);
-        recyclerView.setAdapter(adapter);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+//        List<Item> items = new ArrayList<>();
+//        for (int i = 1; i <= 30; i++) {
+//            Item item = new Item();
+//            item.title = "item" + i;
+//            if (i == 3 || i == 27) {
+//                List<String> list = new ArrayList<>();
+//                for (int j = 1; j <= 10; j++) {
+//                    list.add("MarqueeView Item " + i + "-" + j);
+//                }
+//                item.list = list;
+//                item.showList = true;
+//            }
+//            items.add(item);
+//        }
+//
+//        RecyclerView recyclerView = view.findViewById(R.id.recycleView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.setLayoutManager(layoutManager);
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(items);
+//        recyclerView.setAdapter(adapter);
+//
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+//        });
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
