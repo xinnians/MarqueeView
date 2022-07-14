@@ -3,22 +3,18 @@ buildscript {
         mavenCentral()
         google()
         jcenter()
-        maven { url 'https://dl.bintray.com/sfsheng0322/maven' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
-        classpath 'com.novoda:bintray-release:0.9'
     }
 }
 
 allprojects {
     repositories {
-        maven { url 'https://jitpack.io' }
         mavenCentral()
         google()
         jcenter()
-        maven { url 'https://dl.bintray.com/sfsheng0322/maven' }
     }
 
     ext {
