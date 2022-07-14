@@ -60,3 +60,4 @@ dependencies {
         implementation 'com.sunfusheng:MarqueeView:' + VERSION_NAME
     }
 }
+

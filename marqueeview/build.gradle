@@ -23,3 +23,13 @@ publish {
     desc = 'A custom view for vertical or horizontal flip announcement.'
     website = 'https://github.com/sunfusheng/MarqueeView'
 }
+
+publishing{
+    publications{
+        mavenJava(MavenPublication){
+            groupId = 'org.gradle.sample'
+            artifactId = 'library'
+            version = '1.1'
+        }
+    }
+}
